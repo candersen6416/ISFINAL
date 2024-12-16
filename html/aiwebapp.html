@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #282c34;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            border: 2px solid white;
+            background-color: #000;
+        }
+        .score, .play-again {
+            font-size: 20px;
+            margin: 10px;
+        }
+        .play-again {
+            display: none;
+            cursor: pointer;
+            padding: 10px 20px;
+            border: 2px solid white;
+            border-radius: 5px;
+            background-color: #444;
+        }
+        .play-again:hover {
+            background-color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="score">Score: <span id="score">0</span></div>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <div class="play-again" id="playAgain">Play Again</div>
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        const box = 20; // Size of each snake segment
+        const playAgainButton = document.getElementById("playAgain");
+        const scoreDisplay = document.getElementById("score");
+
+        let snake, direction, food, score, gameInterval;
+
+        // Initialize the game
+        function init() {
+            snake = [{ x: 10 * box, y: 10 * box }];
+            direction = "RIGHT";
+            food = generateFood();
+            score = 0;
+            scoreDisplay.textContent = score;
+
+            playAgainButton.style.display = "none";
+            if (gameInterval) clearInterval(gameInterval);
+            gameInterval = setInterval(draw, 100);
+        }
+
+        // Generate random food position
+        function generateFood() {
+            return {
+                x: Math.floor(Math.random() * (canvas.width / box)) * box,
+                y: Math.floor(Math.random() * (canvas.height / box)) * box,
+            };
+        }
+
+        // Draw function
+        function draw() {
+            // Clear canvas
+            ctx.fillStyle = "#000";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw snake
+            for (let i = 0; i < snake.length; i++) {
+                ctx.fillStyle = i === 0 ? "#00FF00" : "#FFFFFF";
+                ctx.fillRect(snake[i].x, snake[i].y, box, box);
+            }
+
+            // Draw food
+            ctx.fillStyle = "#FF0000";
+            ctx.fillRect(food.x, food.y, box, box);
+
+            // Move the snake
+            let head = { ...snake[0] };
+            if (direction === "LEFT") head.x -= box;
+            if (direction === "UP") head.y -= box;
+            if (direction === "RIGHT") head.x += box;
+            if (direction === "DOWN") head.y += box;
+
+            // Check for collisions
+            if (
+                head.x < 0 ||
+                head.y < 0 ||
+                head.x >= canvas.width ||
+                head.y >= canvas.height ||
+                snake.some(segment => segment.x === head.x && segment.y === head.y)
+            ) {
+                gameOver();
+                return;
+            }
+
+            // Check if food is eaten
+            if (head.x === food.x && head.y === food.y) {
+                score++;
+                scoreDisplay.textContent = score;
+                food = generateFood();
+            } else {
+                snake.pop(); // Remove the tail
+            }
+
+            snake.unshift(head);
+        }
+
+        // Handle Game Over
+        function gameOver() {
+            clearInterval(gameInterval);
+            alert("Game Over! Your score: " + score);
+            playAgainButton.style.display = "block";
+        }
+
+        // Keyboard controls
+        document.addEventListener("keydown", event => {
+            if (event.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
+            if (event.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
+            if (event.key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
+            if (event.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
+        });
+
+        // Restart the game when clicking "Play Again"
+        playAgainButton.addEventListener("click", init);
+
+        // Start the game
+        init();
+    </script>
+</body>
+</html>
+

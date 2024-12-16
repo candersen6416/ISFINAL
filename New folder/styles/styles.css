@@ -1,0 +1,59 @@
+body{
+    background-color:black;
+    color:white;
+    font-family:'Courier New', Courier, monospace;
+    
+
+}
+
+.Website{
+    background-color:black;
+    color:white;
+    font-family:'Courier New', Courier, monospace;
+    text-align: right;
+}
+h1{
+    color:#91f88e;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    font-style: italic;
+    left: 220px;
+
+}
+
+h2{
+    color: white;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}   
+h3{
+    color: white;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    text-align: right;
+    text-size-adjust: 65;
+}
+
+.main-content{
+
+    margin-left:220px;
+    
+}
+
+.sidebar{
+    background-color:rgb(40, 184, 35);
+    width: 200px;
+    height: 100%;
+    left:0;
+    padding: 15px;
+    position: fixed;
+}
+}
+.navbar{
+    padding: 10px;
+    display:flex;
+    left: 220px;
+    }
+.box-model{
+    padding: 15px;
+    background-color: aqua;
+    border: 5px solid yellow;
+    margin: 20px;
+}
